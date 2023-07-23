@@ -1,59 +1,120 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
 body {
+  display: flex;
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: currentColor;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+img {
   display: block;
 }
-.search-form {
+
+:root {
+  --timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  --animation-duration: 250ms;
+  --col-gap: 12px;
+  --row-gap: 12px;
+}
+
+.wrapper {
   display: flex;
-  background-color: blue;
-  margin: 0 auto;
-  padding: 8px 0;
-  justify-content: center;
+  position: relative;
+  flex-direction: column;
 }
 
 .gallery {
   display: flex;
-  max-width: 1140px;
   flex-wrap: wrap;
-  gap: 12px;
-  flex-basis: calc((100%-36px) / 4);
-  justify-content: center;
-  align-items: center;
+  gap: var(--col-gap) var(--row-gap);
+  padding: 80px 16px 0 16px;
+  flex-basis: calc((100% - var(--col-gap) * 3) / 4);
 }
+
 .photo-card {
-  width: 240px;
-  font-style: none;
-  box-shadow: 0px 8px 100px rgba(0, 0, 0, 0.1);
-}
-.photo-card:hover {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-.img-container {
-  position: relative;
-  width: 100%;
-  height: auto;
-  overflow: hidden;
-}
-.card-img {
-  max-width: 300px;
-  height: auto;
-}
-.info {
+  /* position: relative; */
   display: flex;
-  flex-wrap: nowrap;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  width: 80px;
+  flex-direction: column;
+  text-decoration: none;
+  height: fit-content;
+  width: fit-content;
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2),
+    0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12);
 }
+
+.img-container {
+  display: flex;
+}
+
+.card-img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  transition: transform var(--animation-duration) var(--timing-function);
+}
+
+.photo-card:hover {
+  transform: scale(1.03);
+}
+
+.info {
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
 .info-item {
   display: flex;
   flex-direction: column;
+  gap: 4px;
   justify-content: center;
   align-items: center;
-  color: black;
-  widows: 80px;
-  text-decoration: none;
 }
+
 .load-more {
-  display: block;
+  display: none;
   margin-left: auto;
+}
+
+.form-box {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  display: flex;
+  width: 100%;
+  height: 80px;
+  background-color: rgb(23, 23, 165);
+}
+
+.search-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
 }
