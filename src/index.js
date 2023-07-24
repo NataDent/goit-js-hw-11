@@ -26,7 +26,8 @@ refs.form.addEventListener('submit', onSubmit);
 async function onSubmit(e) {
   e.preventDefault();
   
-    refs.gallery.innerHTML = '';
+  refs.gallery.innerHTML = '';
+  refs.loadMore.style.display = 'none';
     page = 1;
     searchQuery = e.target.elements.searchQuery.value.replaceAll(' ', '+');
     try {
@@ -37,7 +38,8 @@ async function onSubmit(e) {
             throw new Error('Sorry, there are no images matching your search query. Please try again.')
         }
       else if (!e.target.elements.searchQuery.value) {
-          Notify.warning('Please, enter a query')
+          Notify.warning('Please, enter a query');
+          return;
         }  
       Notify.success(`Hooray! We found ${totalHits} images.`);
       
