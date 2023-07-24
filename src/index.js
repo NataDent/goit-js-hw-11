@@ -13,7 +13,6 @@ const refs = {
 }
 const lightbox = new SimpleLightbox('.gallery a', { showCounter: false });
 
-let counter = 1;
 let page = 1;
 let searchQuery = '';
 
@@ -33,32 +32,30 @@ async function onSubmit(e) {
     try {
         const resp = await fetchImiges(searchQuery, page);
         const totalHits = resp.data.totalHits;
-
+      
         if (!totalHits ) {
             throw new Error('Sorry, there are no images matching your search query. Please try again.')
         }
       else if (!e.target.elements.searchQuery.value) {
           Notify.warning('Please, enter a query')
-          return;
-        }
-      else {
-        Notify.success(`Hooray! We found ${totalHits} images.`)
-      };
+        }  
+      Notify.success(`Hooray! We found ${totalHits} images.`);
+      
+      if (totalHits <= 40) {
+        refs.loadMore.style.display = 'none';
+          }
 
       const markup = resp.data.hits.map(createMurkup).join('');
       
       refs.gallery.innerHTML = markup;
       refs.loadMore.style.display = 'block';
       lightbox.refresh();
-      
-      
+      smoothScroll();
   } catch (error) {
       Notify.failure(error.message);
       e.target.reset();
   };
 } 
-
-
 
  function createMurkup({ webformatURL, tags, likes, views, comments, downloads, largeImageURL }) {
   return `<a href="${largeImageURL}" class="photo-card">
@@ -80,31 +77,43 @@ async function onSubmit(e) {
 </a>`
 }
 
-
 refs.loadMore.addEventListener('click', onLoadMore);
-lightbox.refresh();
 
 async function onLoadMore() {
-  lightbox.refresh();
+ 
+  refs.loadMore.style.display = 'none';
+
   try {
     page += 1;
     searchQuery = refs.form.elements.searchQuery.value;
     const resp = await fetchImiges(searchQuery, page);
     const markup = resp.data.hits.map(createMurkup).join('');
+    const totalHits = resp.data.totalHits;
+    const lastPage = Math.ceil(totalHits / 40);
+      console.log(lastPage);
 
     refs.gallery.insertAdjacentHTML('beforeend', markup);
-    
-    console.dir(resp);
     refs.loadMore.style.display = 'block';
     lightbox.refresh();
 
-    if (resp.data.totalHits < 40) {
+    if (page === lastPage) {
       refs.loadMore.style.display = 'none';
       Notify.info("We're sorry, but you've reached the end of search results.")
-      refs.form.reset();
-    }
+}
 
-  } catch (err) {
+    }
+   catch (err) {
     Notify.failure(err.message);
+    return;
   }
+}
+
+function smoothScroll() {
+  const { height: cardHeight } = refs.gallery
+  .firstElementChild.getBoundingClientRect();
+
+  window.scrollBy({
+    top: cardHeight,
+    behavior: "smooth",
+  });
 }
