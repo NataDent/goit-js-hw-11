@@ -25,7 +25,8 @@ async function fetchImiges() {
 refs.form.addEventListener('submit', onSubmit);
 
 async function onSubmit(e) {
-    e.preventDefault();
+  e.preventDefault();
+  
     refs.gallery.innerHTML = '';
     page = 1;
     searchQuery = e.target.elements.searchQuery.value.replaceAll(' ', '+');
@@ -96,6 +97,13 @@ async function onLoadMore() {
     console.dir(resp);
     refs.loadMore.style.display = 'block';
     lightbox.refresh();
+
+    if (resp.data.totalHits < 40) {
+      refs.loadMore.style.display = 'none';
+      Notify.info("We're sorry, but you've reached the end of search results.")
+      refs.form.reset();
+    }
+
   } catch (err) {
     Notify.failure(err.message);
   }
