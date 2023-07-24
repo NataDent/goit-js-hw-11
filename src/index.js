@@ -12,11 +12,12 @@ const refs = {
   loadMore: document.querySelector('.load-more')
 }
 const lightbox = new SimpleLightbox('.gallery a', { showCounter: false });
-let counter = 1;
+
+// let counter = 1;
 let page = 1;
+let searchQuery = '';
 
 async function fetchImiges() {  
-    
     const responce = await axios.get(`${BASE_URL}?key=${API_KEY}&q=${searchQuery}&image_type=photo&safesearch=true&per_page=40&orientation=horizontal&page=${page}`);
     return responce;
 }
@@ -86,7 +87,7 @@ async function onLoadMore() {
     const markup = resp.data.hits.map(createMurkup).join('');
 
     refs.gallery.insertAdjacentHTML('beforeend', markup);
-     
+    
     console.dir(resp);
     refs.loadMore.style.display = 'block';
     lightbox.refresh();
