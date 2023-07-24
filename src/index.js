@@ -13,7 +13,7 @@ const refs = {
 }
 const lightbox = new SimpleLightbox('.gallery a', { showCounter: false });
 
-// let counter = 1;
+let counter = 1;
 let page = 1;
 let searchQuery = '';
 
