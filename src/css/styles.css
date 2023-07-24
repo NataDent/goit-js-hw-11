@@ -56,7 +56,7 @@ img {
 }
 
 .photo-card {
-  /* position: relative; */
+  position: relative;
   display: flex;
   flex-direction: column;
   text-decoration: none;

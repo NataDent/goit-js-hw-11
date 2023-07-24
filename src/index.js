@@ -33,11 +33,16 @@ async function onSubmit(e) {
         const resp = await fetchImiges(searchQuery, page);
         const totalHits = resp.data.totalHits;
 
-        if (!totalHits) {
+        if (!totalHits ) {
             throw new Error('Sorry, there are no images matching your search query. Please try again.')
         }
-
-        Notify.success(`Hooray! We found ${totalHits} images.`);
+      else if (!e.target.elements.searchQuery.value) {
+          Notify.warning('Please, enter a query')
+          return;
+        }
+      else {
+        Notify.success(`Hooray! We found ${totalHits} images.`)
+      };
 
       const markup = resp.data.hits.map(createMurkup).join('');
       
@@ -74,7 +79,7 @@ async function onSubmit(e) {
 </a>`
 }
 
-counter = 1;
+
 refs.loadMore.addEventListener('click', onLoadMore);
 lightbox.refresh();
 
