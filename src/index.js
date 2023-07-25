@@ -41,9 +41,7 @@ async function onSubmit(e) {
           Notify.warning('Please, enter a query');
           return;
       } 
-        else if (totalHits <= 40) {
-         refs.loadMore.style.display = 'none';  
-      }else
+      else
         {
           Notify.success(`Hooray! We found ${totalHits} images.`);
         }
@@ -51,9 +49,15 @@ async function onSubmit(e) {
       const markup = resp.data.hits.map(createMurkup).join('');
       
       refs.gallery.innerHTML = markup;
-      refs.loadMore.style.display = 'block';
+
+         if (totalHits <= 40) {
+         refs.loadMore.style.display = 'none';  
+      }else
+         {
+           refs.loadMore.style.display = 'block';
+}
       lightbox.refresh();
-      smoothScroll();
+      // smoothScroll();
   } catch (error) {
       Notify.failure(error.message);
       e.target.reset();
