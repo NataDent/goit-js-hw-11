@@ -46,7 +46,7 @@ async function onSubmit(e) {
           Notify.success(`Hooray! We found ${totalHits} images.`);
         }
 
-      const markup = resp.data.hits.map(createMurkup).join('');
+      const markup = resp.data.hits.map(createMarkup).join('');
       
       refs.gallery.innerHTML = markup;
 
@@ -57,14 +57,14 @@ async function onSubmit(e) {
            refs.loadMore.style.display = 'block';
 }
       lightbox.refresh();
-      // smoothScroll();
+      
   } catch (error) {
       Notify.failure(error.message);
       e.target.reset();
   };
 } 
 
- function createMurkup({ webformatURL, tags, likes, views, comments, downloads, largeImageURL }) {
+ function createMarkup({ webformatURL, tags, likes, views, comments, downloads, largeImageURL }) {
   return `<a href="${largeImageURL}" class="photo-card">
   <div class="img-container"><img class="card-img" src="${webformatURL}" alt="${tags}" loading="lazy" /></div>
   <div class="info">
@@ -84,43 +84,47 @@ async function onSubmit(e) {
 </a>`
 }
 
-refs.loadMore.addEventListener('click', onLoadMore);
+// refs.loadMore.addEventListener('click', onLoadMore);
 
-async function onLoadMore() {
+// async function onLoadMore() {
  
-  refs.loadMore.style.display = 'none';
+//   refs.loadMore.style.display = 'none';
 
-  try {
-    page += 1;
-    searchQuery = refs.form.elements.searchQuery.value;
-    const resp = await fetchImiges(searchQuery, page);
-    const markup = resp.data.hits.map(createMurkup).join('');
-    const totalHits = resp.data.totalHits;
-    const lastPage = Math.ceil(totalHits / 40);
-      console.log(lastPage);
+//   try {
+//     page += 1;
+//     searchQuery = refs.form.elements.searchQuery.value;
+//     const resp = await fetchImiges(searchQuery, page);
+//     const markup = resp.data.hits.map(createMurkup).join('');
+//     const totalHits = resp.data.totalHits;
+//     const lastPage = Math.ceil(totalHits / 40);
+//       console.log(lastPage);
 
-    refs.gallery.insertAdjacentHTML('beforeend', markup);
-    refs.loadMore.style.display = 'block';
-    lightbox.refresh();
+//     refs.gallery.insertAdjacentHTML('beforeend', markup);
+//     refs.loadMore.style.display = 'block';
+//     lightbox.refresh();
 
-    if (page === lastPage) {
-      refs.loadMore.style.display = 'none';
-      Notify.info("We're sorry, but you've reached the end of search results.")
+//     if (page === lastPage) {
+//       refs.loadMore.style.display = 'none';
+//       Notify.info("We're sorry, but you've reached the end of search results.")
+// }
+//     }
+//    catch (err) {
+//     Notify.failure(err.message);
+//     return;
+//   }
+// }
+
+window.addEventListener('scroll', async () => {
+    refs.loadMore.style.display = 'none'; 
+const documentRect = document.documentElement.getBoundingClientRect();
+if (documentRect.bottom < document.documentElement.clientHeight + 150) {
+   page += 1; 
+  searchQuery = refs.form.elements.searchQuery.value;
+  const resp = await fetchImiges(searchQuery, page);
+    
+    const markup = resp.data.hits.map(createMarkup).join('');
+  refs.gallery.insertAdjacentHTML('beforeend', markup);
+  lightbox.refresh();
+  return;
 }
-
-    }
-   catch (err) {
-    Notify.failure(err.message);
-    return;
-  }
-}
-
-function smoothScroll() {
-  const { height: cardHeight } = refs.gallery
-  .firstElementChild.getBoundingClientRect();
-
-  window.scrollBy({
-    top: cardHeight,
-    behavior: "smooth",
-  });
-}
+})
