@@ -41,22 +41,23 @@ async function onSubmit(e) {
           Notify.warning('Please, enter a query');
           return;
       } 
-      else
-        {
+        else if (totalHits <= 40 && totalHits > 0) {
+          Notify.info("We're sorry, but you've reached the end of search results.");
+          refs.loadMore.style.display = 'none'; 
+      }
+       else {
           Notify.success(`Hooray! We found ${totalHits} images.`);
+           refs.loadMore.style.display = 'block'; 
+      }
         }
 
       const markup = resp.data.hits.map(createMarkup).join('');
       
       refs.gallery.innerHTML = markup;
+       lightbox.refresh();
 
-         if (totalHits <= 40) {
-         refs.loadMore.style.display = 'none';  
-      }else
-         {
-           refs.loadMore.style.display = 'block';
-}
-      lightbox.refresh();
+     
+     
       
   } catch (error) {
       Notify.failure(error.message);
