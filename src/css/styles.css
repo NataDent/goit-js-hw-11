@@ -101,6 +101,10 @@ img {
   margin-left: auto;
 }
 
+.hidden {
+  display: none;
+}
+
 .form-box {
   position: fixed;
   top: 0;
