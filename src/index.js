@@ -57,7 +57,7 @@ async function onSubmit(e) {
            refs.loadMore.style.display = 'block';
 }
       lightbox.refresh();
-      console.dir(refs.gallery.children.length); 
+      
   } catch (error) {
       Notify.failure(error.message);
       e.target.reset();
@@ -87,8 +87,6 @@ async function onSubmit(e) {
 refs.loadMore.addEventListener('click', onLoadMore);
 
 async function onLoadMore() {
- 
-  refs.loadMore.style.display = 'none';
 
   try {
     page += 1;
@@ -96,14 +94,12 @@ async function onLoadMore() {
     const resp = await fetchImiges(searchQuery, page);
     const markup = resp.data.hits.map(createMarkup).join('');
     const totalHits = resp.data.totalHits;
-    const lastPage = Math.ceil(totalHits / 40);
-      console.log(lastPage);
 
     refs.gallery.insertAdjacentHTML('beforeend', markup);
-    refs.loadMore.style.display = 'block';
+   
     lightbox.refresh();
 
-    if (page === lastPage) {
+    if (page === Math.ceil(totalHits / 40)) {
       refs.loadMore.style.display = 'none';
       Notify.info("We're sorry, but you've reached the end of search results.")
 }
@@ -114,3 +110,18 @@ async function onLoadMore() {
   }
 }
 
+// window.addEventListener('scroll', async () => {
+//     refs.loadMore.style.display = 'none'; 
+// const documentRect = document.documentElement.getBoundingClientRect();
+// if (documentRect.bottom < document.documentElement.clientHeight + 150) {
+//    page += 1; 
+//   searchQuery = refs.form.elements.searchQuery.value;
+//   const resp = await fetchImiges(searchQuery, page);
+    
+//     const markup = resp.data.hits.map(createMarkup).join('');
+//   refs.gallery.insertAdjacentHTML('beforeend', markup);
+//   lightbox.refresh();
+//   console.dir(refs.gallery.children.length)
+ 
+//   }
+// })
